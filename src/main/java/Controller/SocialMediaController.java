@@ -17,6 +17,8 @@ public class SocialMediaController {
     public Javalin startAPI() {
         Javalin app = Javalin.create();
         app.get("example-endpoint", this::exampleHandler);
+        app.post("/register", this::registerHandler);
+        app.post("/login", this::loginHandler);
 
         return app;
     }
@@ -27,6 +29,14 @@ public class SocialMediaController {
      */
     private void exampleHandler(Context context) {
         context.json("sample text");
+    }
+
+    private void registerHandler(Context context) {
+        //implement registration logic here later!
+    }
+
+    private void loginHandler(Context context) {
+        //implement login logic later
     }
 
 
