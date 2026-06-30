@@ -1,0 +1,29 @@
+package Service;
+import DAO.AccountDAO;
+import Model.Account;
+
+public class AccountService {
+        private AccountDAO accountDAO = new AccountDAO();
+
+        public AccountService(AccountDAO accountDAO) {
+            this.accountDAO = accountDAO;
+        }
+
+        public Account register(Account account) {
+            //1. Validation check (Throws IllegalArgumentException for 400 errors)
+            if (account.getUsername() == null || account.getUsername().isBlank()) {
+                throw new IllegalArgumentException("Username cannot be blank");
+            }
+            if (account.getPassword() == null || account.getPassword().isBlank() || account.getPassword().length() < 4) {
+                throw new IllegalArgumentException("Password must be at least 4 characters long");
+            }
+            //Duplicate check
+            if (accountDAO.getAccountByUsername(account.getUsername()) != null) {
+                throw new DuplicateUsernameException("Username alreadys exists");
+            }
+
+            return accountDAO.insertAccount(account.getUsername(), account.getPassword());
+        }
+
+
+}
