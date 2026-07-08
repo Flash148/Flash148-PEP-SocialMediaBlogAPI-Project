@@ -3,7 +3,7 @@ import DAO.AccountDAO;
 import Model.Account;
 
 public class AccountService {
-        private AccountDAO accountDAO = new AccountDAO();
+        private AccountDAO accountDAO;
 
         public AccountService() {
             this.accountDAO = new AccountDAO();
