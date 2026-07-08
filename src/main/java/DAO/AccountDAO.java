@@ -46,7 +46,39 @@ public class AccountDAO {
         
         return null; // 3. Return null if no account matches the username
     }
-    // insert new account into the database 
+    // look up an account by its id, used to validate posted_by on messages
+    public Account getAccountById(int accountId) {
+        String query = "SELECT * FROM account WHERE account_id = ?";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            stmt = connection.prepareStatement(query);
+            stmt.setInt(1, accountId);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new Account(
+                    rs.getInt("account_id"),
+                    rs.getString("username"),
+                    rs.getString("password")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+    // insert new account into the database
     public Account insertAccount(String username, String password) {
         String insertQuery = "INSERT INTO account (username, password) VALUES (?, ?)";
         PreparedStatement insertStmt = null;
