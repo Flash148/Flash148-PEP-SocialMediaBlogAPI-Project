@@ -5,6 +5,10 @@ import Model.Account;
 public class AccountService {
         private AccountDAO accountDAO = new AccountDAO();
 
+        public AccountService() {
+            this.accountDAO = new AccountDAO();
+        }
+
         public AccountService(AccountDAO accountDAO) {
             this.accountDAO = accountDAO;
         }
