@@ -25,5 +25,17 @@ public class AccountService {
             return accountDAO.insertAccount(account.getUsername(), account.getPassword());
         }
 
+         public Account login(Account account) {
+            // Retrieve the account from the database
+            Account existingAccount = accountDAO.getAccountByUsername(account.getUsername());
+
+            // Check if the account exists and the password matches
+            if (existingAccount != null && existingAccount.getPassword().equals(account.getPassword())) {
+                return existingAccount; // Successful login
+            } else {
+                throw new IllegalArgumentException("Invalid username or password");
+            }
+        }
+
 
 }

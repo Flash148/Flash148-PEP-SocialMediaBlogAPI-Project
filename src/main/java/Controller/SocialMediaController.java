@@ -1,7 +1,9 @@
 package Controller;
-
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import Model.Account;
+import Service.AccountService;
+import Service.DuplicateUsernameException;
 
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller. The endpoints you will need can be
@@ -14,6 +16,13 @@ public class SocialMediaController {
      * suite must receive a Javalin object from this method.
      * @return a Javalin app object which defines the behavior of the Javalin controller.
      */
+    
+    private AccountService accountService;
+
+    public SocialMediaController() {
+        this.accountService = new AccountService(null);
+    }
+
     public Javalin startAPI() {
         Javalin app = Javalin.create();
         app.get("example-endpoint", this::exampleHandler);
@@ -32,12 +41,35 @@ public class SocialMediaController {
     }
 
     private void registerHandler(Context context) {
-        //implement registration logic here later!
+        try {
+            // read incoming JSON and convert to Account object
+            Account account = context.bodyAsClass(Account.class);
+            // Attempt registration via the service layer
+            Account registeredAccount = accountService.register(account);
+    
+            if (registeredAccount != null) {
+                context.json(registeredAccount); // Automatic serialization to JSON (200 OK)
+            } else {
+                context.status(400);
+            }
+        } catch (DuplicateUsernameException | IllegalArgumentException e) {
+            context.status(400); // 400 Bad Request for validation failures
+        }
     }
-
+    
     private void loginHandler(Context context) {
-        //implement login logic later
+        try {
+            Account account = context.bodyAsClass(Account.class);
+            Account loggedInAccount = accountService.login(account);
+    
+            // if login successful, return full account object
+            if (loggedInAccount != null) {
+                context.json(loggedInAccount); // 200 OK
+            } else {
+                context.status(401); // 401 Unauthorized
+            }
+        } catch (IllegalArgumentException e) {
+            context.status(401); // 401 Unauthorized for invalid credentials
+        }
     }
-
-
 }
