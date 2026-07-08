@@ -20,7 +20,7 @@ public class SocialMediaController {
     private AccountService accountService;
 
     public SocialMediaController() {
-        this.accountService = new AccountService(null);
+        this.accountService = new AccountService();
     }
 
     public Javalin startAPI() {
