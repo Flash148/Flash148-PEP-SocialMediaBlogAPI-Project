@@ -1,9 +1,13 @@
 package Controller;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import DAO.AccountDAO;
+import DAO.MessageDAO;
 import Model.Account;
+import Model.Message;
 import Service.AccountService;
 import Service.DuplicateUsernameException;
+import Service.MessageService;
 
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller. The endpoints you will need can be
@@ -18,9 +22,11 @@ public class SocialMediaController {
      */
     
     private AccountService accountService;
-
-    public SocialMediaController() {
-        this.accountService = new AccountService(null);
+    private MessageService messageService;
+    
+        public SocialMediaController() {
+            this.accountService = new AccountService(null);
+            this.messageService = new MessageService(new MessageDAO(), new AccountDAO());
     }
 
     public Javalin startAPI() {
@@ -28,6 +34,7 @@ public class SocialMediaController {
         app.get("example-endpoint", this::exampleHandler);
         app.post("/register", this::registerHandler);
         app.post("/login", this::loginHandler);
+        
 
         return app;
     }
