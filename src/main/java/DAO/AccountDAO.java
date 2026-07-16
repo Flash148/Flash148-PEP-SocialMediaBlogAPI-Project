@@ -12,7 +12,6 @@ public class AccountDAO {
     }
 
     //handle user registration
-    // 1. Return type changed to Account
     public Account getAccountByUsername(String username) { 
         String checkUsernameQuery = "SELECT * FROM account WHERE username = ?";
         PreparedStatement checkUsernameStmt = null;
@@ -24,7 +23,6 @@ public class AccountDAO {
             rs = checkUsernameStmt.executeQuery();
             
             if (rs.next()) {
-                // 2. Read from DB and pass directly into the Account constructor
                 Account account = new Account(
                     rs.getInt("account_id"),
                     rs.getString("username"),
@@ -44,7 +42,7 @@ public class AccountDAO {
             }
         }
         
-        return null; // 3. Return null if no account matches the username
+        return null;
     }
     // look up an account by its id, used to validate posted_by on messages
     public Account getAccountById(int accountId) {
