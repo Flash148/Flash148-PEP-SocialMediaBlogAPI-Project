@@ -8,7 +8,7 @@ import Model.Message;
 import Service.AccountService;
 import Service.DuplicateUsernameException;
 import Service.MessageService;
-
+import Service.UnauthorizedLoginException;
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller. The endpoints you will need can be
  * found in readme.md as well as the test cases. You should
@@ -79,7 +79,7 @@ public class SocialMediaController {
             } else {
                 context.status(401); // 401 Unauthorized
             }
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | UnauthorizedLoginException e) {
             context.status(401); // 401 Unauthorized for invalid credentials
         }
     }

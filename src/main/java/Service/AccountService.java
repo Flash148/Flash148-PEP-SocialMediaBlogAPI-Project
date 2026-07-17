@@ -37,7 +37,7 @@ public class AccountService {
             if (existingAccount != null && existingAccount.getPassword().equals(account.getPassword())) {
                 return existingAccount; // Successful login
             } else {
-                throw new IllegalArgumentException("Invalid username or password");
+                throw new UnauthorizedLoginException("Invalid username or password");
             }
         }
 
