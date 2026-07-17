@@ -25,7 +25,7 @@ public class SocialMediaController {
     private MessageService messageService;
     
         public SocialMediaController() {
-            this.accountService = new AccountService(null);
+            this.accountService = new AccountService(new AccountDAO());
             this.messageService = new MessageService(new MessageDAO(), new AccountDAO());
     }
 
