@@ -11,7 +11,6 @@ public class AccountDAO {
         this.connection = Util.ConnectionUtil.getConnection();
     }
 
-    //handle user registration
     public Account getAccountByUsername(String username) { 
         String checkUsernameQuery = "SELECT * FROM account WHERE username = ?";
         PreparedStatement checkUsernameStmt = null;
@@ -28,12 +27,11 @@ public class AccountDAO {
                     rs.getString("username"),
                     rs.getString("password")
                 );
-                return account; // Return the found account
+                return account;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            // close resources
             try {
                 if (rs != null) rs.close();
                 if (checkUsernameStmt != null) checkUsernameStmt.close();
@@ -44,7 +42,7 @@ public class AccountDAO {
         
         return null;
     }
-    // look up an account by its id, used to validate posted_by on messages
+
     public Account getAccountById(int accountId) {
         String query = "SELECT * FROM account WHERE account_id = ?";
         PreparedStatement stmt = null;
@@ -76,11 +74,9 @@ public class AccountDAO {
         return null;
     }
 
-    // insert new account into the database
     public Account insertAccount(String username, String password) {
         String insertQuery = "INSERT INTO account (username, password) VALUES (?, ?)";
         PreparedStatement insertStmt = null;
-
 
         try {
             insertStmt = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);

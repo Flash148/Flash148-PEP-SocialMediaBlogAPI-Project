@@ -31,10 +31,14 @@ public class SocialMediaController {
 
     public Javalin startAPI() {
         Javalin app = Javalin.create();
-        app.get("example-endpoint", this::exampleHandler);
         app.post("/register", this::registerHandler);
         app.post("/login", this::loginHandler);
-        
+        app.post("/messages", this::createMessageHandler);
+        app.get("/messages", this::getAllMessagesHandler);
+        app.get("/messages/{message_id}", this::getMessageByIdHandler);
+        app.delete("/messages/{message_id}", this::deleteMessageHandler);
+        app.patch("/messages/{message_id}", this::updateMessageHandler);
+        app.get("/accounts/{account_id}/messages", this::getMessagesByAccountHandler);
 
         return app;
     }
@@ -79,4 +83,51 @@ public class SocialMediaController {
             context.status(401); // 401 Unauthorized for invalid credentials
         }
     }
+
+    private void createMessageHandler(Context context) {
+        try {
+            Message message = context.bodyAsClass(Message.class);
+            Message createdMessage = messageService.createMessage(message);
+            context.json(createdMessage);
+        } catch (IllegalArgumentException e) {
+            context.status(400);
+        }
+    }
+
+    private void getAllMessagesHandler(Context context) {
+        context.json(messageService.getAllMessages());
+    }
+
+    private void getMessageByIdHandler(Context context) {
+        int messageId = Integer.parseInt(context.pathParam("message_id"));
+        Message message = messageService.getMessageById(messageId);
+        if (message != null) {
+            context.json(message);
+        }
+    }
+
+    private void deleteMessageHandler(Context context) {
+        int messageId = Integer.parseInt(context.pathParam("message_id"));
+        Message deletedMessage = messageService.deleteMessageById(messageId);
+        if (deletedMessage != null) {
+            context.json(deletedMessage);
+        }
+    }
+
+    private void updateMessageHandler(Context context) {
+        try {
+            int messageId = Integer.parseInt(context.pathParam("message_id"));
+            Message messageUpdate = context.bodyAsClass(Message.class);
+            Message updatedMessage = messageService.updateMessageText(messageId, messageUpdate.getMessage_text());
+            context.json(updatedMessage);
+        } catch (IllegalArgumentException e) {
+            context.status(400);
+        }
+    }
+
+    private void getMessagesByAccountHandler(Context context) {
+        int accountId = Integer.parseInt(context.pathParam("account_id"));
+        context.json(messageService.getMessagesByAccountId(accountId));
+    }
+
 }
